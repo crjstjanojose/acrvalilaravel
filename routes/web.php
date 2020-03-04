@@ -37,7 +37,6 @@ Route::post('/removepermissaogrupo/{user}', 'Admin\GrupoController@removePermiss
 /* ROTAS DO PROJETO BASE DE ACESSO */
 
 
-
 // FIM ROTAS GETS VIEWS E TABELAS
 Route::get('/getTableEncomendaPendente', 'Admin\EncomendaController@getEncomendaPendente')->name('encomendas.table.pendentes');
 Route::get('/getTableEncomendaSolicitada', 'Admin\EncomendaController@getEncomendaSolicitadas')->name('encomendas.table.solicitadas');
