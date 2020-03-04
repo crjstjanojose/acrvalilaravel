@@ -64,7 +64,7 @@
                                 <label for="tipo_encomenda">Tipo da Encomenda</label>
                                 <select name="tipo_encomenda" id="tipo_encomenda" class="form-control">
                                     <option value="Falta">FALTA NO ESTOQUE</option>
-                                    <option value="Reposicao">ESTOQUE BAIXO</option>
+                                    <option value="Baixo">ESTOQUE BAIXO</option>
                                     <option value="Procura">PROCURA DEMANDA DE VENDA</option>
                                     <option value="Encomenda">ENCOMENDA DE CLIENTE</option>
                                 </select>
