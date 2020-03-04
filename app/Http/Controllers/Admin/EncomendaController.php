@@ -23,10 +23,10 @@ class EncomendaController extends Controller
         $this->middleware(['permission:encomenda-confirmar-compra'], ['only' => ['solicitarCompra', 'confirmarCompra']]);
         $this->middleware(['permission:encomenda-listar-solicitada'], ['only' => ['getViewEncomendaSolicitadas']]);
         $this->middleware(['permission:encomenda-comfirmar-entrega'], ['only' => ['prepararEntrega', 'confirmarEntrega']]);
-        
+        $this->middleware(['permission:encomenda-listar-cancelada'], ['only' => ['getViewEncomendaTrash']]);
+        $this->middleware(['permission:encomenda-listar-entregue'], ['only' => ['getViewEncomendaEntregues']]);
+        $this->middleware(['permission:encomenda-visualizar-cancelada'], ['only' => ['showTrash']]);
     }
-
-
 
 
     /**
@@ -83,6 +83,7 @@ class EncomendaController extends Controller
             $encomenda->quantidade = $request->quantidade;
             $encomenda->preco = $request->preco;
             $encomenda->previsao = $request->previsao;
+            $encomenda->tipo_encomenda = $request->tipo_encomenda;
             $encomenda->user_criacao = Auth::user()->id;
             $encomenda->save();
 
@@ -167,10 +168,12 @@ class EncomendaController extends Controller
     {
         $encomendas = Encomenda::select([
             'encomendas.id', 'encomendas.nome', 'encomendas.descricao',
-            'encomendas.quantidade', 'encomendas.created_at', 'encomendas.previsao', 'users.name'
+            'encomendas.quantidade', 'encomendas.created_at', 'encomendas.previsao', 'users.name',
+            'encomendas.tipo_encomenda'
         ])
             ->join('users', 'users.id', '=', 'encomendas.user_criacao')
-            ->whereIn('situacao_pedido', ['Pendente']);
+            ->whereIn('situacao_pedido', ['Pendente'])
+            ->orderBy('encomendas.id', 'desc');
 
         return Datatables::of($encomendas)
             ->addColumn('btns', 'acrpaginas.encomendas.actions')
@@ -183,7 +186,8 @@ class EncomendaController extends Controller
     {
         $encomendas = Encomenda::select([
             'encomendas.id', 'encomendas.nome', 'encomendas.descricao',
-            'encomendas.quantidade', 'encomendas.created_at', 'encomendas.previsao', 'users.name'
+            'encomendas.quantidade', 'encomendas.created_at', 'encomendas.previsao', 'users.name',
+            'encomendas.tipo_encomenda'
         ])
             ->join('users', 'users.id', '=', 'encomendas.user_solicitacao')
             ->whereIn('situacao_pedido', ['Solicitado']);
@@ -198,7 +202,7 @@ class EncomendaController extends Controller
     {
         $encomendas = Encomenda::select([
             'encomendas.id', 'encomendas.nome', 'encomendas.descricao',
-            'encomendas.quantidade', 'encomendas.created_at', 'encomendas.previsao', 'users.name'
+            'encomendas.quantidade', 'encomendas.created_at', 'encomendas.previsao', 'users.name', 'encomendas.tipo_encomenda'
         ])
             ->join('users', 'users.id', '=', 'encomendas.user_confirmacao')
             ->whereIn('situacao_pedido', ['Entregue']);

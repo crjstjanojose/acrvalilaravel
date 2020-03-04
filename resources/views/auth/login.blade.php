@@ -8,8 +8,7 @@
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
     <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css"
-        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Login</title>
 </head>
 
@@ -19,16 +18,17 @@
     </section>
     <section class="login-content">
         <div class="logo">
-            <h1>ACR</h1>
+            <h1>
+                <img src="{{ asset('img/logo-medio.png') }}" alt="Logo">
+            </h1>
         </div>
         <div class="login-box">
-            <form class="login-form" method="POST" action="{{ route('login') }}" autocapitalize="false">
+            <form class="login-form" method="POST" action="{{ route('login.post') }}" autocapitalize="false">
                 @csrf
                 <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Acessar</h3>
                 <div class="form-group">
                     <label class="control-label">E-mail</label>
-                    <input class="form-control @error('email') is-invalid @enderror" type="text" placeholder="E-mail"
-                        autofocus name="email" required value="{{ old('email') }}">
+                    <input class="form-control @error('email') is-invalid @enderror" type="text" placeholder="E-mail" autofocus name="email" required value="{{ old('email') }}">
                     @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -37,8 +37,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Senha</label>
-                    <input class="form-control @error('password') is-invalid @enderror" type="password"
-                        placeholder="Senha" name="password" required>
+                    <input class="form-control @error('password') is-invalid @enderror" type="password" placeholder="Senha" name="password" required>
                     @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -52,8 +51,7 @@
                                 <input type="checkbox"><span class="label-text">Manter conectado</span>
                             </label>
                         </div>
-                        <p class="semibold-text mb-2"><a href="{{ route('password.request') }}"
-                                data-toggle="flip">Esqueceu a senha ?</a></p>
+                        <p class="semibold-text mb-2"><a href="{{ route('password.request') }}" data-toggle="flip">Esqueceu a senha ?</a></p>
                     </div>
                 </div>
                 <div class="form-group btn-container">
@@ -90,7 +88,8 @@
           $('.login-content [data-toggle="flip"]').click(function() {
           	$('.login-box').toggleClass('flipped');
           	return false;*/
-          });
+        });
+
     </script>
 </body>
 

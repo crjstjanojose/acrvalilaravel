@@ -129,7 +129,7 @@
                     <div class="row">
 
                         <div class="form-group col-md-12 d-flex flex-row justify-content-end">
-                            <a class="btn btn-secondary mr-2" href="{{  route('encomendas.index') }}"><i
+                            <a class="btn btn-secondary mr-2" href="{{  route('encomendas.index.trash') }}"><i
                                     class="fa fa-fw fa-lg fa-times-circle"></i>Cancelar</a>
 
                         </div>

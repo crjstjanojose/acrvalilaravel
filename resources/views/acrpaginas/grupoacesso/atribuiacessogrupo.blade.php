@@ -1,5 +1,6 @@
 @extends('acrlayout.app')
 
+
 @section('conteudo')
 <main class="app-content">
     <div class="app-title">
@@ -13,8 +14,8 @@
     </div>
     <!-- END app-title -->
     <div class="row">
-        <div class="col-md-12">
-            <div class="tile">
+        <div class="tile">
+            <div class="col-md-12">
                 <div class="tile-body">
                     <div class="form-group">
                         <h3>{{ $role->name }}</h3>
@@ -37,10 +38,8 @@
                                     <div class="tile-footer">
                                         <div class="row">
                                             <div class="form-group col-md-12 d-flex flex-row justify-content-end">
-                                                <a class="btn btn-secondary mr-2" href="{{  route('grupos.index') }}"><i
-                                                        class="fa fa-fw fa-lg fa-times-circle"></i>Cancelar</a>
-                                                <button class="btn btn-primary" type="submit"><i
-                                                        class="fa fa-fw fa-lg fa-check-circle"></i>Salvar</button>
+                                                <a class="btn btn-secondary mr-2" href="{{  route('grupos.index') }}"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancelar</a>
+                                                <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Salvar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -63,18 +62,19 @@
 @push('scripts')
 <script>
     $('#permissions').bootstrapDualListbox({
-        nonSelectedListLabel: 'Liberados',
-        selectedListLabel: 'Removidos',
-        preserveSelectionOnMove: 'moved',
-        moveOnSelect: 'false',
-        selectorMinimalHeight: 300,
-        initialfilterfrom: '',
-        moveSelectedLabel: 'Remove',
-        filterTextClear: 'Limpar Filtro',
-        filterPlaceHolder: 'Filtrar',
-        infoTextEmpty: 'Nenhum registro encontrado',
-        infoText: 'Pesquisar',
-        infoTextFiltered: '<span class="label label-warning">Filtro ativo</span> {0} from {1}'
-      });
+        nonSelectedListLabel: 'Liberados'
+        , selectedListLabel: 'Removidos'
+        , preserveSelectionOnMove: 'moved'
+        , moveOnSelect: 'false'
+        , selectorMinimalHeight: 300
+        , initialfilterfrom: ''
+        , moveSelectedLabel: 'Remove'
+        , filterTextClear: 'Limpar Filtro'
+        , filterPlaceHolder: 'Filtrar'
+        , infoTextEmpty: 'Nenhum registro encontrado'
+        , infoText: 'Pesquisar'
+        , infoTextFiltered: '<span class="label label-warning">Filtro ativo</span> {0} from {1}'
+    });
+
 </script>
 @endpush

@@ -1,4 +1,4 @@
-@can('encomenda-visualizar-pendente')
+@can('encomenda-visualizar-entregue')
 <a class="btn btn-sm btn-dark text-center" href="{{ route('encomendas.show',$id) }}" data-toggle="tooltip"
     data-placement="top" title="Visualizar Encomenda"> <i class="fa fa-search" aria-hidden="true"></i></a>
 @endcan

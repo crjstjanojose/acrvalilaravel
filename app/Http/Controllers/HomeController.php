@@ -25,7 +25,22 @@ class HomeController extends Controller
     public function index()
     {
 
-        $pendente = DB::table('encomendas')->where('situacao_pedido', 'Pendente')->count();
+        $pendentes1 = DB::table('encomendas')
+        ->where([
+        ['situacao_pedido', '=', 'Pendente'],
+        ])->count();
+
+
+        $pendentes = DB::table('encomendas')
+        ->where([
+        ['situacao_pedido', '=', 'Pendente'],
+        ['deleted_at', '<>', 'IS NULL'],
+        ])->count();
+
+
+
+        //$pendente = DB::table('/encomendas')->where('situacao_pedido', 'Pendente')->count();
+        $pendente = $pendentes1 - $pendentes;
         $solicitada = DB::table('encomendas')->where('situacao_pedido', 'Solicitado')->count();
         $entregue = DB::table('encomendas')->where('situacao_pedido', 'Entregue')->count();
         $excluida = DB::table('encomendas')->where('situacao_pedido', 'Cancelada')->count();

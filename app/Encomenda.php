@@ -4,19 +4,24 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Encomenda extends Model
 {
     use SoftDeletes;
 
-    protected $fillble = ['nome', 'contato', 'descricao', 'quantidade', 'preco', 'previsao'];
+    protected $fillble = ['nome', 'contato', 'descricao', 'quantidade', 'preco', 'previsao', 'tipo_encomenda'];
 
     protected $dates = [
         'previsao',
         'created_at'
     ];
 
-    //protected $dateFormat = 'd/m/Y';
+    //protected $dateFormat = 'd/m/Y H:m';
+
+    protected $casts = [
+    'created_at' => 'datetime:d/m/Y H:m:s',
+    ];
 
     public function getPrevisaoAttribute()
     {
@@ -31,7 +36,9 @@ class Encomenda extends Model
 
     public function getCreatedAtAttribute()
     {
-        return date('d/m H:m', strtotime($this->attributes['created_at']));
+        //return date('d/m/Y H:m', strtotime($this->attributes['created_at']));
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['created_at'])->format('d/m/Y H:i:s');
+
     }
 
     public function setPrecoAttribute($value)

@@ -8,14 +8,11 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use DataTables;
 use DB;
+use App\User;
+
 
 class GrupoController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['permission:grupo-listar'], ['only' => ['index']]);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +30,7 @@ class GrupoController extends Controller
      */
     public function create()
     {
-        //
+        return view('acrpaginas.grupoacesso.create');
     }
 
     /**
@@ -44,7 +41,21 @@ class GrupoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            DB::beginTransaction();
+            $role = new Role();
+            $role->name = $request->get('name');
+
+            $role->save();
+
+            DB::commit();
+
+            return redirect()->route('roles.index')->with('msgSucesso', 'Grupo cadastrado com sucesso !');
+        } catch (exception $e) {
+            DB::rollback();
+            return redirect()->route('roles.index')->with('msgErro', 'Ops! Grupo não cadastrado !');
+        }
     }
 
     /**
@@ -55,7 +66,6 @@ class GrupoController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -66,7 +76,8 @@ class GrupoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $role = Role::find($id);
+        return view('acrpaginas.grupoacesso.edit', compact('role'));
     }
 
     /**
@@ -78,7 +89,22 @@ class GrupoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+
+            DB::beginTransaction();
+            $role = Role::find($id);
+
+            $role->name = $request->get('name');
+
+            $role->save();
+
+            DB::commit();
+
+            return redirect()->route('roles.index')->with('msgSucesso', 'Grupo alterado com sucesso !');
+        } catch (exception $e) {
+            DB::rollback();
+            return redirect()->route('roles.index')->with('msgErro', 'Ops! Grupo não alterado !');
+        }
     }
 
     /**
@@ -92,6 +118,7 @@ class GrupoController extends Controller
         //
     }
 
+
     public function getTableGrupos()
     {
         $grupos = Role::select(['id', 'name']);
@@ -102,9 +129,19 @@ class GrupoController extends Controller
             ->toJson();
     }
 
-    public function postRemovePermission(Request $request)
+
+
+    public function viewRemovePermissaoGrupo($id)
     {
-        $role = Role::find($request->input('id'));
+        $role = Role::find($id);
+        $permissions = $role->permissions;
+        return view('acrpaginas.grupoacesso.rempermissaogrupo', compact('permissions', 'role'));
+    }
+
+    public function removePermissaoGrupo(Request $request, $id)
+    {
+
+        $role = Role::find($id);
 
         try {
             DB::beginTransaction();
@@ -112,21 +149,14 @@ class GrupoController extends Controller
                 $role->revokePermissionTo($permission);
             }
             DB::commit();
-            return redirect()->route('grupos.index')->with('msgSucesso', 'Acesso(s) excluídos com sucesso !');
+            return redirect()->route('roles.index')->with('msgSucesso', 'Acesso(s) excluídos com sucesso !');
         } catch (exception $e) {
             DB::rollback();
-            return redirect()->route('grupos.index')->with('msgErro', 'Ops! Erro ao remover acessos do grupo !');
+            return redirect()->route('roles.index')->with('msgErro', 'Ops! Erro ao remover acessos do grupo !');
         }
     }
 
-    public function viewRemoveAcessoGrupo($id)
-    {
-        $role = Role::find($id);
-        $permissions = $role->permissions;
-        return view('acrpaginas.grupoacesso.removeacessogrupo', compact('permissions', 'role'));
-    }
-
-    public function viewAdicionaAcessoGrupo($id)
+    public function viewAdicionaPermissaoGrupo($id)
     {
         $role = Role::find($id);
         $opcoes = Permission::all();
@@ -137,13 +167,12 @@ class GrupoController extends Controller
             }
         }
 
-        return view('acrpaginas.grupoacesso.atribuiacessogrupo', compact('permissions', 'role'));
+        return view('acrpaginas.grupoacesso.addpermissaogrupo', compact('permissions', 'role'));
     }
 
-
-    public function postAdicionaPermission(Request $request)
+    public function adicionaPermissaoGrupo(Request $request, $id)
     {
-        $role = Role::find($request->input('id'));
+        $role = Role::find($id);
 
         try {
             DB::beginTransaction();
@@ -151,10 +180,75 @@ class GrupoController extends Controller
                 $role->givePermissionTo($permission);
             }
             DB::commit();
-            return redirect()->route('grupos.index')->with('msgSucesso', 'Acesso(s) excluídos com sucesso !');
+            return redirect()->route('roles.index')->with('msgSucesso', 'Acesso(s) excluídos com sucesso !');
         } catch (exception $e) {
             DB::rollback();
-            return redirect()->route('grupos.index')->with('msgErro', 'Ops! Erro ao remover acessos do grupo !');
+            return redirect()->route('roles.index')->with('msgErro', 'Ops! Erro ao remover acessos do grupo !');
+        }
+    }
+
+    public function viewRemoveUsuarioGrupo($id)
+    {
+
+        $role = Role::find($id);
+        $usuarios = $role->users;
+        $users = [];
+        foreach ($usuarios as $usuario) {
+            if ($usuario->hasRole($role->name)) {
+                array_push($users, $usuario);
+            }
+        }
+
+        return view('acrpaginas.grupoacesso.remusuariogrupo', compact('users', 'role'));
+    }
+
+    public function removeUsuarioGrupo(Request $request, $id)
+    {
+        $role = Role::find($id);
+        try {
+            DB::beginTransaction();
+            foreach ($request->users as $user) {
+                $u = User::find($user);
+                $u->removeRole($role->name);
+            }
+            DB::commit();
+            return redirect()->route('roles.index')->with('msgSucesso', 'Usuáio(s) excluídos com sucesso !');
+        } catch (exception $e) {
+            DB::rollback();
+            return redirect()->route('roles.index')->with('msgErro', 'Ops! Erro ao remover usuário do grupo !');
+        }
+    }
+
+    public function viewAdicionaUsuarioGrupo($id)
+    {
+
+        $role = Role::find($id);
+        $usuarios = User::all();
+        $users = [];
+        foreach ($usuarios as $usuario) {
+            if (!$usuario->hasRole($role->name)) {
+                array_push($users, $usuario);
+            }
+        }
+
+        return view('acrpaginas.grupoacesso.addusuariogrupo', compact('users', 'role'));
+    }
+
+    public function adicionaUsuarioGrupo(Request $request, $id)
+    {
+
+        $role = Role::find($id);
+        try {
+            DB::beginTransaction();
+            foreach ($request->users as $user) {
+                $u = User::find($user);
+                $u->assignRole($role->name);
+            }
+            DB::commit();
+            return redirect()->route('roles.index')->with('msgSucesso', 'Usuáio(s) adicionados com sucesso !');
+        } catch (exception $e) {
+            DB::rollback();
+            return redirect()->route('roles.index')->with('msgErro', 'Ops! Erro ao adiciona usuário do grupo !');
         }
     }
 }
