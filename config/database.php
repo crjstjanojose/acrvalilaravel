@@ -46,11 +46,11 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'farmaciaacr-db.mysql.uhserver.com'),
+            'host' => env('DB_HOST', ''),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'farmaciaacr_db'),
             'username' => env('DB_USERNAME', 'farmaciaacr'),
-            'password' => env('DB_PASSWORD', 'ptrs@795168'),
+            'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
